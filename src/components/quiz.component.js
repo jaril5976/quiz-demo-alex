@@ -106,5 +106,5 @@ class Quiz extends React.Component{
   }
 }
 
-//EXPORT COMPONENT 
+//EXPORT COMPONENT
 export default Quiz;
