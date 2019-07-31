@@ -81,7 +81,7 @@ class Quiz extends React.Component{
       <React.Fragment>
         <br/>
         <div>
-          <div className='button-center' id='next' onClick={this.startQuiz}><a href="#">{!quiz ? 'Start Quiz' : 'Stop'} {this.interval}</a></div>
+          <div className='button-center' id='next' onClick={this.startQuiz}><a href="#">{!quiz ? 'Start Quiz' : 'Stop'}</a></div>
         </div>
         {loading &&  <p>Loading...</p>}
         {(quiz && items.length > 0) && items.map((data, i) =>(
