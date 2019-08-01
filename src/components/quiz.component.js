@@ -8,12 +8,15 @@ class Quiz extends React.Component{
   //STATE DECLARE
   state = {
     quiz: false,
-    timer: false,
     loading: false,
     items: [],
     score:null,
     answers: [],
-    display: false
+    display: false,
+    urserFirst: 0,
+    runningTime:0,
+    status: false,
+    timeTaken:0
   }
 
   //GET QUESTIONS FUNCTION FOR CALL API AND FETCH QUIZ DATA
@@ -29,6 +32,7 @@ class Quiz extends React.Component{
             loading: false,
             items: result.results
           });
+          this.startTime();
         },
         (error) => {
           //ERROR HANDLE
@@ -48,16 +52,38 @@ class Quiz extends React.Component{
       this.state.answers[index] = 0
   }
 
+  //START TIME FUNCTION
+  startTime = () => {
+    this.setState(state => {
+      if (state.status) {
+        clearInterval(this.timer);
+      } else {
+        const startTime = Date.now() - this.state.runningTime;
+        this.timer = setInterval(() => {
+          this.setState({ runningTime: Date.now() - startTime });
+        });
+      }
+      return { status: !state.status };
+    });
+  }
+
+  //RESET TIME FUNCTION
+  resetTime = () => {
+    clearInterval(this.timer);
+    this.setState({ runningTime: 0, status: false });
+  }
+
   //FINAL RESULT FUNCTION
   handleResult = () => {
     var score = 0;
     this.state.answers.forEach(function(x) { if(x == 1) score++ });
-    this.setState({score, display: true})
+    this.setState({score, display: true, urserFirst:1, timeTaken: this.state.runningTime})
+    this.resetTime()
   }
 
   //RESET STATE FUNCTION
-  handleResetQuiz = () => {
-    this.setState({answers:[], score: null, display: false, items: []})
+  handleResetQuiz = () => {;
+    this.setState({answers:[], score: null, display: false, items: [], timeTaken: 0})
   }
 
   //START QUIZ -- MANAGE BY BUTTON
@@ -66,22 +92,23 @@ class Quiz extends React.Component{
       if(this.state.quiz){
         this.handleResetQuiz();
         this.getQuestions();
-        this.setState({timer:true})
       }
       else {
         this.handleResult()
-        this.setState({timer:false})
       }
     })
   }
+
+  //REACT RENDER FUNCTION
   render(){
     //SHORT STATE DECLARATION
-    const { quiz, items, score, display, loading } = this.state;
+    const { quiz, items, score, display, loading, urserFirst, runningTime, timeTaken } = this.state;
     return (
       <React.Fragment>
         <br/>
         <div>
-          <div className='button-center' id='next' onClick={this.startQuiz}><a href="#">{!quiz ? 'Start Quiz' : 'Stop'}</a></div>
+          <div className='button-center' id='next' onClick={this.startQuiz}><a href="#">{!quiz ? urserFirst == 1 ? 'Play Again' :'Start Quiz' : 'Stop'}</a></div>
+          {runningTime > 0 && <p>{runningTime}ms</p>}{timeTaken > 0 && <p>Time taken for the exam is {timeTaken}ms</p>}
         </div>
         {loading &&  <p>Loading...</p>}
         {(quiz && items.length > 0) && items.map((data, i) =>(
