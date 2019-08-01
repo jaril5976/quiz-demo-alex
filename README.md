@@ -9,11 +9,11 @@ In the project directory, you can run:
 
 ## Functionalities
 
-#### API call for quiz
-#### Start quiz
-#### Timer
-#### Answer calculation with score
-#### Play Again
+1. API call for quiz
+1. Start quiz
+1. Timer
+1. Answer calculation with score
+1. Play Again
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
